@@ -1,0 +1,18 @@
+{
+  "executorAddress": "z1qqp22leuqa32un6vegg8ty40vkdupgf7negvv0",
+  "networkName": "devnet",
+  "pillarName": "dev1",
+  "znndEndpoint": "http://rpc:35997",
+  "confirmationDepth": 3,
+  "storagePath": "/var/lib/executor",
+  "submissionKeySource": { "kind": "FILE", "path": "/run/secrets/executor_b_key" },
+  "workers": [
+    {
+      "domainId": 1,
+      "binary": "/usr/local/bin/worker-wasm",
+      "stfSpecHash": "0000000000000000000000000000000000000000000000000000000000000001",
+      "memoryLimit": 1073741824,
+      "cpuLimit": 1.0
+    }
+  ]
+}

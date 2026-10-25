@@ -1,0 +1,118 @@
+# Privileged and cgroup: private only for this local environment: they give the supervisor the
+# uid and cgroup delegation a real deployment would grant through its own container runtime.
+name: zeno-devnet
+
+include:
+  - ${ZENO_DEVNET_SRC:?run the devnet through scripts/devnet.sh}/zenon-network/go-zenon/docker-compose.yml
+
+services:
+  executor: &executor
+    build:
+      context: ${ZENO_DEVNET_SRC}/zeno/zeno-executor
+      target: runtime
+      additional_contexts:
+        go-zenon: ${ZENO_DEVNET_SRC}/zenon-network/go-zenon
+    command: ["-config", "/etc/executor/executor.json"]
+    # The image defaults to the gateway's uid. The supervisor needs root
+    # to separate worker uids.
+    user: "0:0"
+    init: true
+    privileged: true
+    cgroup: private
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - devnet
+    volumes:
+      - executor-data:/var/lib/executor
+      - ./config/executor.json:/etc/executor/executor.json:ro
+    secrets:
+      - source: executor_key
+        uid: "0"
+        gid: "0"
+        mode: 0400
+    mem_limit: 1536m
+    cpus: 2
+    pids_limit: 256
+    stop_grace_period: 45s
+
+  # The gateway runs unprivileged as uid 9999. Its simulators run as
+  # the same uid with no memory cap of their own, so mem_limit and
+  # memswap_limit cap the gateway and its simulators together.
+  # GOMAXPROCS matches cpus for the gateway only: simulators start
+  # with an empty environment.
+  gateway: &gateway
+    build:
+      context: ${ZENO_DEVNET_SRC}/zeno/zeno-executor
+      target: runtime
+      additional_contexts:
+        go-zenon: ${ZENO_DEVNET_SRC}/zenon-network/go-zenon
+    entrypoint: ["gateway"]
+    command: ["-config", "/etc/gateway/gateway.json"]
+    user: "9999:9999"
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      GOMAXPROCS: "2"
+    networks:
+      - devnet
+    ports:
+      - "127.0.0.1:35999:35999"
+    volumes:
+      - executor-data:/var/lib/executor:ro
+      - gateway-data:/var/lib/gateway
+      - ./config/gateway.json:/etc/gateway/gateway.json:ro
+    mem_limit: 3g
+    memswap_limit: 3g
+    cpus: 2
+    pids_limit: 256
+    stop_grace_period: 15s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # executor-b is the replacement executor identity (account index 10),
+  # used only by flow:executor-replacement. Both it and gateway-b start
+  # only when that flow starts them.
+  executor-b:
+    <<: *executor
+    profiles: ["replacement"]
+    volumes:
+      - executor-b-data:/var/lib/executor
+      - ./config/executor-b.json:/etc/executor/executor.json:ro
+    secrets:
+      - source: executor_b_key
+        uid: "0"
+        gid: "0"
+        mode: 0400
+
+  gateway-b:
+    <<: *gateway
+    profiles: ["replacement"]
+    ports:
+      - "127.0.0.1:36002:35999"
+    volumes:
+      - executor-b-data:/var/lib/executor:ro
+      - gateway-b-data:/var/lib/gateway
+      - ./config/gateway.json:/etc/gateway/gateway.json:ro
+
+volumes:
+  executor-data:
+  gateway-data:
+  executor-b-data:
+  gateway-b-data:
+
+secrets:
+  executor_key:
+    # bd2b1f4b42334f923064f466ed5590379498585b2dd4e42152db0e5ddbe2023e
+    # is the public seed of devnet account index 3, for the devnet
+    # only, never for any other network.
+    environment: EXECUTOR_KEY
+  executor_b_key:
+    # 94b472df6365ac1365b4989d7e37961b4a620eb352d57941140d70bcc10c1804
+    # is the public seed of devnet account index 10, for the devnet
+    # only, never for any other network.
+    environment: EXECUTOR_B_KEY

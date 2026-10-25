@@ -1,0 +1,17 @@
+{
+  "znndEndpoint": "http://rpc:35997",
+  "networkName": "devnet",
+  "confirmationDepth": 3,
+  "storagePath": "/var/lib/gateway",
+  "listenAddress": "0.0.0.0:35999",
+  "allowedOrigins": ["http://localhost:5173", "http://127.0.0.1:5173"],
+  "domains": [
+    {
+      "domainId": 1,
+      "source": "LOCAL",
+      "executorStoragePath": "/var/lib/executor",
+      "workerBinary": "/usr/local/bin/worker-wasm"
+    }
+  ],
+  "simulation": { "maxConcurrent": 1 }
+}

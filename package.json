@@ -1,0 +1,33 @@
+{
+  "name": "zeno-devnet",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "^22.23.0 || ^24.17.0 || >=26.1.0"
+  },
+  "scripts": {
+    "typecheck": "tsc",
+    "test": "tsx --test test/*.test.ts",
+    "flow:deploy-quota": "tsx flows/deploy-quota.ts",
+    "flow:deposit": "tsx flows/deposit.ts",
+    "flow:call-refund": "tsx flows/call-refund.ts",
+    "flow:withdrawal": "tsx flows/withdrawal.ts",
+    "flow:force-inclusion": "tsx flows/force-inclusion.ts",
+    "flow:worker-crash": "tsx flows/worker-crash.ts",
+    "flow:crash-recovery": "tsx flows/crash-recovery.ts",
+    "flow:executor-replacement": "tsx flows/executor-replacement.ts",
+    "flow:pause": "tsx flows/pause.ts",
+    "flow:fees": "tsx flows/fees.ts",
+    "flows": "npm run flow:deploy-quota && npm run flow:deposit && npm run flow:call-refund && npm run flow:withdrawal && npm run flow:force-inclusion && npm run flow:worker-crash && npm run flow:crash-recovery && npm run flow:executor-replacement && npm run flow:pause && npm run flow:fees"
+  },
+  "dependencies": {
+    "zeno-client": "github:Zeno-L2/zeno-client-ts#e9e02d8b12fa4053b8d19b1a4d6257d933bfdc0a",
+    "znn-typescript-sdk": "github:digitalSloth/znn-typescript-sdk#e3b75183440f8e6543511f7a55e6c66e5736014e"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "tsx": "^4.22.4",
+    "typescript": "^5.4.5"
+  }
+}
