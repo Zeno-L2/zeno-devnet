@@ -3,7 +3,7 @@
 # instead, where <root> is the folder that holds zeno/zeno-devnet.
 #
 # path                       repository                                          commit
-zenon-network/go-zenon       https://github.com/digitalSloth/go-zenon.git        938fca3b7787da86827a5eb63371509b36e14761
-zeno/zeno-executor           https://github.com/Zeno-L2/zeno-executor.git        caeaf764270b1489a53c860c6006026af208f924
-zeno/zeno-console            https://github.com/Zeno-L2/zeno-console.git         b4726037e01e5e2c2a37f3f7a234cc29daee6cc2
+zenon-network/go-zenon       https://github.com/digitalSloth/go-zenon.git        2835c436b197fece5c76adf4ba8dc1decca2e3ea
+zeno/zeno-executor           https://github.com/Zeno-L2/zeno-executor.git        a14bf0e08dad8eabeb1a0e0add9bbaf1e2adac9f
+zeno/zeno-console            https://github.com/Zeno-L2/zeno-console.git         cce1847a6dadfcf89c08e047fb7357cc38be1271
 zeno/zeno-contract-sdk-rs    https://github.com/Zeno-L2/zeno-contract-sdk-rs.git bc1548d75473797f24bb3eb79f5594969c596e39

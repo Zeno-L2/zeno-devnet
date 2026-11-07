@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "zeno-client": "github:Zeno-L2/zeno-client-ts#e9e02d8b12fa4053b8d19b1a4d6257d933bfdc0a",
-    "znn-typescript-sdk": "github:digitalSloth/znn-typescript-sdk#e3b75183440f8e6543511f7a55e6c66e5736014e"
+    "znn-typescript-sdk": "github:digitalSloth/znn-typescript-sdk#75cd2565bd388c1df6b441bfcc1670e8da483c77"
   },
   "devDependencies": {
     "@types/node": "^22",
